@@ -6,18 +6,55 @@
         /* Add your CSS styles here */
         body {
             font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
         }
-        .quiz-container {
-            max-width: 500px;
+        .container {
+            max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #e8e9ea;
+            color: #333;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+        .quiz {
+            text-align: left;
+        }
+        .quiz-start {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .quiz-start button {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .quiz-start button:hover {
+            background-color: #2980b9;
         }
         .question {
             font-size: 18px;
-            margin-bottom: 10px;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 15px;
+            background-color: #f9f9f9;
+        }
+        .question:nth-child(odd) {
+            background-color: #fff7d6; /* Beautiful background color for odd questions */
         }
         .answer {
-            margin-bottom: 5px;
+            margin-bottom: 10px;
         }
         .correct {
             background-color: #b0e57c; /* Green for correct */
@@ -25,69 +62,236 @@
         .incorrect {
             background-color: #ff7f7f; /* Red for incorrect */
         }
-        #result {
-            margin-top: 10px;
+        .timer-bar {
+            background-color: #cde1d1;
+            color: #443a3a;
+            padding: 10px 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            margin-bottom: 10px;
+	    font-size: 20px;
+        }
+        .grade {
+            font-size: 20px;
+            margin: 10px 0;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px 0;
+            background-color: #3498db;
+            color: #fff;
         }
     </style>
 </head>
 <body>
-    <div class="quiz-container">
-        <h1>Quiz</h1>
-        <div class="question">
-            <p>Question 1: What is the capital of France?</p>
-            <div class="answer">
-                <input type="radio" name="q1" value="Paris"> Paris
-            </div>
-            <div class="answer">
-                <input type="radio" name="q1" value="London"> London
-            </div>
-            <div class="answer">
-                <input type="radio" name="q1" value="Berlin"> Berlin
-            </div>
-            <div class="answer">
-                <input type="radio" name="q1" value="Madrid"> Madrid
+    <div class="container">
+        <div class="header">
+            <h1 style="margin: 20px 0;">Quiz</h1>
+            <div class="timer-bar">
+                <p>Time Left: <span id="timer">1:00</span></p>
+                <div id="result">Grade: <span id="grade">0</span></p>
             </div>
         </div>
+        <div class="quiz-start">
+            <button onclick="startQuiz()">Start</button>
+        </div>
+        <div class="quiz" id="question-container" style="display: none;">
+	
+<p style="margin-left:20px;margin-right:20px; text-align: justify;font-size:25px;color:#fff;background-color: #f07a40;border-radius: 15px;padding: 15px;text-indent: 15px;line-height: 1.8;">Reading 1</p>
 
-        <!-- Add more questions and answers here -->
+	<p style="margin-left:20px;margin-right:20px; text-align: justify;font-size:20px;color:#333;background-color: #e0eeff;border-radius: 15px;padding: 15px;text-indent: 15px;line-height: 1.8;"> Title: Albert Einstein - Ein Genie des 20. Jahrhunderts
 
-        <button onclick="calculateScore()">Finish</button>
-        <div id="result"></div>
+Albert Einstein war zweifellos einer der bedeutendsten Wissenschaftler des 20. Jahrhunderts. Er wurde am 14. März 1879 in Ulm, Deutschland, geboren und veränderte die Welt der Physik für immer.
+
+Schon als Kind fiel Albert durch seine außergewöhnliche Neugier und sein Talent in Mathematik und Physik auf. Seine bahnbrechende Arbeit zur speziellen und allgemeinen Relativitätstheorie revolutionierte unser Verständnis von Raum, Zeit und Gravitation. Seine berühmte Gleichung E=mc², die die Äquivalenz von Masse und Energie beschreibt, ist weltweit bekannt.
+
+Während seiner Karriere arbeitete Einstein an verschiedenen Universitäten und Forschungseinrichtungen und erhielt zahlreiche Auszeichnungen, darunter den Nobelpreis für Physik im Jahr 1921. Obwohl er als Wissenschaftler berühmt war, setzte er sich auch aktiv für den Frieden und die Völkerverständigung ein.
+
+Einstein starb am 18. April 1955 in Princeton, New Jersey, USA. Sein Erbe lebt jedoch in den Büchern, wissenschaftlichen Arbeiten und den Köpfen von Forschern auf der ganzen Welt weiter.</p>
+            <!-- Questions and answers will be loaded here -->
+        </div>
+        <div class="quiz-start">
+            <button id="finish-button" onclick="finishQuiz()" style="display: none;">Finish</button>
+        </div>
+        <!-- <div id="result"></div> -->
     </div>
-
+    <div class="footer">
+        &copy; 2023 YourQuizApp.com
+    </div>>
     <script>
-        function calculateScore() {
-            const answers = document.querySelectorAll('input[name="q1"]');
-            let correctAnswer = false;
+        const quizData = [
+            {
+                question: "What is the capital of France?",
+                answers: [
+                    { text: "Paris", correct: true },
+                    { text: "London", correct: false },
+                    { text: "Berlin", correct: false },
+                    { text: "Madrid", correct: false }
+                ]
+            },
+            {
+                question: "Which planet is known as the Red Planet?",
+                answers: [
+                    { text: "Mars", correct: true },
+                    { text: "Venus", correct: false },
+                    { text: "Jupiter", correct: false },
+                    { text: "Saturn", correct: false }
+                ]
+            },
+            {
+                question: "What is the largest mammal?",
+                answers: [
+                    { text: "Elephant", correct: false },
+                    { text: "Whale Shark", correct: true },
+                    { text: "Lion", correct: false },
+                    { text: "Giraffe", correct: false }
+                ]
+            },
+            {
+                question: "What is the capital of France?",
+                answers: [
+                    { text: "Paris", correct: true },
+                    { text: "London", correct: false },
+                    { text: "Berlin", correct: false },
+                    { text: "Madrid", correct: false }
+                ]
+            },
+            {
+                question: "Which planet is known as the Red Planet?",
+                answers: [
+                    { text: "Mars", correct: true },
+                    { text: "Venus", correct: false },
+                    { text: "Jupiter", correct: false },
+                    { text: "Saturn", correct: false }
+                ]
+            },
+            {
+                question: "What is the largest mammal?",
+                answers: [
+                    { text: "Elephant", correct: false },
+                    { text: "Whale Shark", correct: true },
+                    { text: "Lion", correct: false },
+                    { text: "Giraffe", correct: false }
+                ]
+            },
+            {
+                question: "What is the capital of France?",
+                answers: [
+                    { text: "Paris", correct: true },
+                    { text: "London", correct: false },
+                    { text: "Berlin", correct: false },
+                    { text: "Madrid", correct: false }
+                ]
+            },
+            {
+                question: "Which planet is known as the Red Planet?",
+                answers: [
+                    { text: "Mars", correct: true },
+                    { text: "Venus", correct: false },
+                    { text: "Jupiter", correct: false },
+                    { text: "Saturn", correct: false }
+                ]
+            },
+            {
+                question: "What is the largest mammal?",
+                answers: [
+                    { text: "Elephant", correct: false },
+                    { text: "Whale Shark", correct: true },
+                    { text: "Lion", correct: false },
+                    { text: "Giraffe", correct: false }
+                ]
+            }
+        ];
 
-            answers.forEach(answer => {
-                if (answer.checked) {
-                    if (answer.value === "Paris") {
-                        answer.parentElement.classList.add('correct');
-                        correctAnswer = true;
-                    } else {
-                        answer.parentElement.classList.add('incorrect');
-                    }
-                }
+        const questionContainer = document.getElementById('question-container');
+        const totalQuestions = quizData.length;
+        let correctAnswers = 0;
+
+        const timerElement = document.getElementById('timer');
+        let timeLeft = 60; // 60 seconds
+        let timerInterval;
+
+        function updateTimer() {
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                finishQuiz();
+            } else {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                timeLeft--;
+            }
+        }
+
+        function startQuiz() {
+            document.querySelector('.quiz-start button').style.display = 'none';
+            questionContainer.style.display = 'block';
+
+            // Update the timer every second
+            timerInterval = setInterval(updateTimer, 1000);
+
+            quizData.forEach((quizItem, index) => {
+                const question = document.createElement('div');
+                question.className = 'question';
+                question.innerHTML = `<p>Question ${index + 1}: ${quizItem.question}</p>`;
+
+                quizItem.answers.forEach((answerItem, answerIndex) => {
+                    const answer = document.createElement('div');
+                    answer.className = 'answer';
+                    answer.innerHTML = `<input type="radio" name="q${index}" id="q${index}a${answerIndex}" value="${answerItem.text}"> ${answerItem.text}`;
+                    question.appendChild(answer);
+                });
+
+                questionContainer.appendChild(question);
             });
 
-            // Disable radio buttons after submitting
+            document.querySelector('button#finish-button').style.display = 'block';
+        }
+
+        function finishQuiz() {
+            clearInterval(timerInterval); // Stop the timer
+            calculateScore();
+            // Disable radio buttons after clicking "Finish"
+            const radioButtons = document.querySelectorAll('input[type="radio"]');
+            radioButtons.forEach(radio => {
+                radio.disabled = true;
+            });
+        }
+
+        function calculateScore() {
+            const answers = document.querySelectorAll('input[type="radio"]:checked');
+
             answers.forEach(answer => {
+                const questionIndex = answer.name.substring(1); // Extract question index
+                const selectedAnswer = quizData[questionIndex].answers.find(item => item.text === answer.value);
+
+                if (selectedAnswer && selectedAnswer.correct) {
+                    answer.parentElement.classList.add('correct');
+                    correctAnswers++;
+                } else {
+                    answer.parentElement.classList.add('incorrect');
+                    // Show the correct answer for incorrect choices
+                    const correctAnswerElement = document.querySelector(`#q${questionIndex}a${quizData[questionIndex].answers.findIndex(item => item.correct === true)}`);
+                    correctAnswerElement.parentElement.classList.add('correct');
+                }
+                // Disable radio buttons after submitting
                 answer.disabled = true;
             });
 
-            // Display the correct answer if the user selected an incorrect answer
-            if (!correctAnswer) {
-                const correctAnswerElement = document.querySelector('input[value="Paris"]');
+            // Check for unanswered questions and display correct answers
+            const unansweredQuestions = document.querySelectorAll('input[type="radio"]:not(:checked)');
+            unansweredQuestions.forEach(unanswered => {
+                const questionIndex = unanswered.name.substring(1); // Extract question index
+                const correctAnswerElement = document.querySelector(`#q${questionIndex}a${quizData[questionIndex].answers.findIndex(item => item.correct === true)}`);
                 correctAnswerElement.parentElement.classList.add('correct');
-            }
+            });
 
             const resultElement = document.getElementById('result');
-            if (correctAnswer) {
-                resultElement.textContent = "Correct answer!";
-            } else {
-                resultElement.textContent = "Incorrect answer.";
-            }
+            const grade = `${correctAnswers} of ${totalQuestions}`;
+            resultElement.textContent = `Grade: ${grade}`;
+            resultElement.style.display = 'block';
         }
     </script>
 </body>
