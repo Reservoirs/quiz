@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz</title>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .quiz-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .answer {
+            margin-bottom: 5px;
+        }
+        .correct {
+            background-color: #b0e57c; /* Green for correct */
+        }
+        .incorrect {
+            background-color: #ff7f7f; /* Red for incorrect */
+        }
+        #result {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Quiz</h1>
+        <div class="question">
+            <p>Question 1: What is the capital of France?</p>
+            <div class="answer">
+                <input type="radio" name="q1" value="Paris"> Paris
+            </div>
+            <div class="answer">
+                <input type="radio" name="q1" value="London"> London
+            </div>
+            <div class="answer">
+                <input type="radio" name="q1" value="Berlin"> Berlin
+            </div>
+            <div class="answer">
+                <input type="radio" name="q1" value="Madrid"> Madrid
+            </div>
+        </div>
+
+        <!-- Add more questions and answers here -->
+
+        <button onclick="calculateScore()">Finish</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function calculateScore() {
+            const answers = document.querySelectorAll('input[name="q1"]');
+            let correctAnswer = false;
+
+            answers.forEach(answer => {
+                if (answer.checked) {
+                    if (answer.value === "Paris") {
+                        answer.parentElement.classList.add('correct');
+                        correctAnswer = true;
+                    } else {
+                        answer.parentElement.classList.add('incorrect');
+                    }
+                }
+            });
+
+            // Disable radio buttons after submitting
+            answers.forEach(answer => {
+                answer.disabled = true;
+            });
+
+            // Display the correct answer if the user selected an incorrect answer
+            if (!correctAnswer) {
+                const correctAnswerElement = document.querySelector('input[value="Paris"]');
+                correctAnswerElement.parentElement.classList.add('correct');
+            }
+
+            const resultElement = document.getElementById('result');
+            if (correctAnswer) {
+                resultElement.textContent = "Correct answer!";
+            } else {
+                resultElement.textContent = "Incorrect answer.";
+            }
+        }
+    </script>
+</body>
+</html>
