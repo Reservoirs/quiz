@@ -3,3 +3,7 @@ What is the capital of France?
 - London
 - Berlin
 - Madrid
+
+Another question?
+- Correct answer (true)
+- Incorrect answer
